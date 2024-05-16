@@ -2,15 +2,15 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: byte-burguer-pod
+  name: byte-burguer-orders-pod
   labels:
-    app: byte-burguer-pod
+    app: byte-burguer-orders-pod
 spec:
   template:
     metadata:
-      name: byte-burguer-pod
+      name: byte-burguer-orders-pod
       labels:
-        app: byte-burguer-pod
+        app: byte-burguer-orders-pod
     spec:
       containers:
         - name: byteburguer-api
@@ -41,4 +41,4 @@ spec:
   replicas: 3
   selector:
     matchLabels: 
-      app: byte-burguer-pod
+      app: byte-burguer-orders-pod
