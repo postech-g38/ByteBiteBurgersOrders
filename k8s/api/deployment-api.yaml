@@ -8,9 +8,9 @@ metadata:
 spec:
   template:
     metadata:
-      name: byte-burguer-orders-pod
+      name: orders-byte-burguer-pod
       labels:
-        app: byte-burguer-orders-pod
+        app: orders-byte-burguer-pod
     spec:
       containers:
         - name: byteburguer-api
@@ -41,4 +41,4 @@ spec:
   replicas: 3
   selector:
     matchLabels: 
-      app: byte-burguer-orders-pod
+      app: orders-byte-burguer-pod
