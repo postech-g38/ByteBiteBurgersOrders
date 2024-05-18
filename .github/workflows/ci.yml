@@ -44,9 +44,6 @@ jobs:
             sleep 2
           done
 
-      - name: List src directory
-        run: ls -la src
-
       - name: Run pytest with coverage
         env:
           DATABASE_USERNAME: postgres
@@ -56,6 +53,11 @@ jobs:
           DATABASE_NAME: postgres
           ENVIRONMENT: 'unittest'
         run: pytest --verbose --cov=src --cov-report=xml
+
+      - name: Verify coverage file path
+        run: |
+          echo "Coverage file path:"
+          realpath coverage.xml
 
       - name: List coverage file
         run: ls -la coverage.xml
