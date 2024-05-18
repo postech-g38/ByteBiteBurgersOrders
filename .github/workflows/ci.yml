@@ -52,7 +52,7 @@ jobs:
           DATABASE_PORT: 5432
           DATABASE_NAME: postgres
           ENVIRONMENT: 'unittest'
-        run: pytest --verbose --cov=src --cov-report=xml
+        run: pytest --verbose --cov=src --cov-report=xml:coverage.xml
 
       - name: List coverage file
         run: ls -la coverage.xml
@@ -66,3 +66,4 @@ jobs:
           args: >
             -Dsonar.projectKey=postech-g38_ByteBiteBurgersOrders
             -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.sources=src
