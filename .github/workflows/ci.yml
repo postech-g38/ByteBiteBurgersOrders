@@ -52,7 +52,9 @@ jobs:
           DATABASE_PORT: 5432
           DATABASE_NAME: postgres
           ENVIRONMENT: 'unittest'
-        run: pytest --verbose --cov=. --cov-report=xml
+        #run: pytest --verbose --cov=. --cov-report=xml
+        run: pytest --verbose --cov=src --cov-report=xml
+
 
       - name: List coverage file
         run: ls -la coverage.xml
