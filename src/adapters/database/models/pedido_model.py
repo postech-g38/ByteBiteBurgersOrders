@@ -16,4 +16,4 @@ class PedidoModel(EntityModel):
     status_pedido: Mapped[Optional[str]]
     status_pagamento: Mapped[Optional[str]]
     pagamento_id: Mapped[Optional[str]]
-    produtos: Mapped[str]  # = mapped_column('produtos', ARRAY(JSON))
+    produtos: Mapped[str]
