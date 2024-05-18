@@ -54,6 +54,9 @@ jobs:
           ENVIRONMENT: 'unittest'
         run: pytest --verbose --cov=. --cov-report=xml
 
+      - name: List coverage file
+        run: ls -la coverage.xml
+
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
         env:
