@@ -50,11 +50,13 @@ jobs:
           DATABASE_PORT: 5432
           DATABASE_NAME: postgres
           ENVIRONMENT: 'unittest'
-        run: |
-          pytest --verbose --cov=src --cov-report=xml:coverage.xml --cov-config <(echo "[run]\nrelative_files = True\n")
+        run: pytest --verbose --cov=src --cov-report=xml:coverage.xml
 
       - name: List coverage file
         run: ls -la coverage.xml
+
+      - name: Show coverage.xml content
+        run: cat coverage.xml
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
@@ -66,4 +68,3 @@ jobs:
             -Dsonar.projectKey=postech-g38_ByteBiteBurgersOrders
             -Dsonar.organization=postech-g38
             -Dsonar.python.coverage.reportPaths=coverage.xml
-            -Dsonar.sources=src
