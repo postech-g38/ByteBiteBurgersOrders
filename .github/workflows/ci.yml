@@ -44,7 +44,7 @@ jobs:
             sleep 2
           done
 
-      - name: Run pytest with coverage (src)
+      - name: Run pytest with coverage
         env:
           DATABASE_USERNAME: postgres
           DATABASE_PASSWORD: postgres
@@ -52,32 +52,12 @@ jobs:
           DATABASE_PORT: 5432
           DATABASE_NAME: postgres
           ENVIRONMENT: 'unittest'
-        run: |
-          pytest --verbose --cov=src --cov-report=xml
-          cp coverage.xml coverage-src.xml
+        run: pytest --verbose --cov=src --cov-report=xml
 
-      - name: Run pytest with coverage (.)
-        env:
-          DATABASE_USERNAME: postgres
-          DATABASE_PASSWORD: postgres
-          DATABASE_HOST: '0.0.0.0'
-          DATABASE_PORT: 5432
-          DATABASE_NAME: postgres
-          ENVIRONMENT: 'unittest'
-        run: |
-          pytest --verbose --cov=. --cov-report=xml
-          cp coverage.xml coverage-dot.xml
+      - name: List coverage file
+        run: ls -la coverage.xml
 
-      - name: List coverage files
-        run: ls -la
-
-      - name: Show coverage.xml content (src)
-        run: cat coverage-src.xml
-
-      - name: Show coverage.xml content (.)
-        run: cat coverage-dot.xml
-
-      - name: SonarQube Scan (src)
+      - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -85,16 +65,4 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=postech-g38_ByteBiteBurgersOrders
-            -Dsonar.python.coverage.reportPaths=coverage-src.xml
-            -Dsonar.verbose=true
-
-      - name: SonarQube Scan (.)
-        uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io
-        with:
-          args: >
-            -Dsonar.projectKey=postech-g38_ByteBiteBurgersOrders
-            -Dsonar.python.coverage.reportPaths=coverage-dot.xml
-            -Dsonar.verbose=true
+            -Dsonar.python.coverage.reportPaths=coverage.xml
