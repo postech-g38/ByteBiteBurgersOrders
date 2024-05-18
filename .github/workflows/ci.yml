@@ -32,8 +32,6 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pwd
-          ls -la
           pip install -r requirements/common.txt
           pip install -r requirements/local.txt
 
@@ -52,7 +50,8 @@ jobs:
           DATABASE_PORT: 5432
           DATABASE_NAME: postgres
           ENVIRONMENT: 'unittest'
-        run: pytest --verbose --cov=src --cov-report=xml:coverage.xml
+        run: |
+          pytest --verbose --cov=src --cov-report=xml:coverage.xml --cov-config <(echo "[run]\nrelative_files = True\n")
 
       - name: List coverage file
         run: ls -la coverage.xml
@@ -65,5 +64,6 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=postech-g38_ByteBiteBurgersOrders
+            -Dsonar.organization=postech-g38
             -Dsonar.python.coverage.reportPaths=coverage.xml
             -Dsonar.sources=src
