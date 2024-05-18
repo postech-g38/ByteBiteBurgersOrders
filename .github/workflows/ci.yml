@@ -72,3 +72,4 @@ jobs:
           args: >
             -Dsonar.projectKey=postech-g38_ByteBiteBurgersOrders
             -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.verbose=true
