@@ -50,11 +50,11 @@ def delete(pedido_id: int = Path(...), repository: PedidoRepository = Depends())
 
 
 @router.get(
-    path='/status', 
+    path='/status/{status}', 
     response_model=ResponsePagination, 
     summary='Pegar Pedido por Status'
 )
-def pedido_get_by_status(status: str = Query(...), repository: PedidoRepository = Depends()):
+def pedido_get_by_status(status: str = Path(...), repository: PedidoRepository = Depends()):
     return PedidoService(repository).get_by_status(status)
 
 
