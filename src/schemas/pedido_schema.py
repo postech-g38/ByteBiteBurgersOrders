@@ -15,6 +15,7 @@ class CreatePedidoPayload(BaseModel):
 
 class CheckoutPedidoPayload(CreatePedidoPayload):
     usuario_documento: Optional[str] = None
+    produtos: list[ProdudoPedidoSchema]
     
 
 

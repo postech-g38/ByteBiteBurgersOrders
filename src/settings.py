@@ -55,9 +55,16 @@ class DatabaseSettings(BaseSettings):
         )
 
 
+class ApiSettings(BaseSettings):
+    pagamento_api_host: str = Field(..., validation_alias='API_PAGAMENTO_HOST')
+    usuario_api_host: str = Field(..., validation_alias='API_USUARIO_HOST')
+
+
+
 class GeneralSettings(BaseSettings):
     application_settings: ClassVar = ApplicationSettings()
     database_settings: ClassVar = DatabaseSettings()
+    api_settings: ClassVar = ApiSettings()
 
 
 @lru_cache

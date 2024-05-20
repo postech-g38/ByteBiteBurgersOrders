@@ -4,9 +4,10 @@ import json
 
 from src.adapters.repositories import PedidoRepository
 from src.adapters.database.models.pedido_model import PedidoModel
-from src.schemas.pedido_schema import CreatePedidoPayload, ResponsePedidoPayload
+from src.schemas.pedido_schema import CreatePedidoPayload, ResponsePedidoPayload, CheckoutPedidoPayload
 from src.services.service_base import BaseService
 from src.enums import PedidoStatus
+from src.api import UsuarioApi, PagamentoApi
 
 
 class PedidoService(BaseService):
@@ -42,9 +43,14 @@ class PedidoService(BaseService):
             sorted([i for i in rows if i.status_pedido == PedidoStatus.PRONTO], key=lambda x: x.created_at)
         )
 
-    def checkout(self, data: CreatePedidoPayload) -> PedidoModel:
+    def checkout(self, data: CheckoutPedidoPayload, usuario_api: UsuarioApi, pagamento_api: PagamentoApi) -> PedidoModel:
         row = PedidoModel(**dict(data))
         total = 0
+
+        if data.usuario_documento:
+            user = usuario_api.get_user(data.usuario_documento)
+        
+        usuario_id = usuario_id.get('id')
 
         for produto in data.produtos:
             produto_info = self.query_result(self.repository.search_by_id(produto.produto_id))
@@ -55,8 +61,17 @@ class PedidoService(BaseService):
         row.status_pagamento = 'Aguardando'
         row.data_mudanca_status = datetime.now()
         row.produtos = json.dumps({'data': [i.model_dump() for i in data.produtos]})
-
-        self.repository.pedido.save(model=row)
-        self.repository.pedido.commit()
         row = self.repository.pedido.model_refresh(model=row)
+
+        self.repository.pedido.save(row)
+        self.repository.pedido.commit()
+
+        pagamento_api.create(
+            metodo='dinheiro', 
+            valor=total, 
+            pedido_id=row.id, 
+            usuario_id=usuario_id
+            )
+
+        
         return ResponsePedidoPayload.model_validate(row).model_dump()

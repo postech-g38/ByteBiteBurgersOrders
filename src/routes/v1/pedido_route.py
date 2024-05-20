@@ -2,8 +2,9 @@ from fastapi import APIRouter, Depends, Response, Request
 
 from src.services.pedido_service import PedidoService
 from src.adapters.repositories import PedidoRepository
-from src.schemas.pedido_schema import CreatePedidoPayload, ResponsePedidoPayload, ResponsePagination
+from src.schemas.pedido_schema import CreatePedidoPayload, ResponsePedidoPayload, ResponsePagination, CheckoutPedidoPayload
 from src.schemas.base_schema import QueryPaginate
+from src.api import UsuarioApi, PagamentoApi, usuario_api_facade, pagamento_api_facade
 
 router = APIRouter(prefix='/pedido', tags=['Pedido'])
 
@@ -71,5 +72,10 @@ def pending_orders(repository: PedidoRepository = Depends()):
     response_model=ResponsePedidoPayload, 
     summary='Efetuar pagamento do Pedido'
 )
-def checkout(payload: CreatePedidoPayload, repository: PedidoRepository = Depends()):
-    return PedidoService(repository).checkout(payload)
+def checkout(
+    payload: CheckoutPedidoPayload, 
+    repository: PedidoRepository = Depends(),
+    usuario: UsuarioApi = Depends(usuario_api_facade),
+    pagamento: PagamentoApi = Depends(pagamento_api_facade)
+    ):
+    return PedidoService(repository).checkout(payload, usuario, pagamento)
