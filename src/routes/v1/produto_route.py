@@ -65,13 +65,13 @@ def delete(produto_id: int = Path(...), repository: ProdutoRepository = Depends(
 
 
 @router.get(
-    path='/categoria', 
+    path='/categoria/{categoria}', 
     status_code=HTTPStatus.OK,
     response_model=ResponsePagination, 
     summary='Pegar Produtos por Categoria'
 )
 def get_by_category(
-    categoria: str = Query(...), 
+    categoria: str = Path(...), 
     repository: ProdutoRepository = Depends()
 ):
     return ProdutoService(repository).get_by_categoria(categoria)
