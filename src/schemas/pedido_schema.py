@@ -20,6 +20,8 @@ class CheckoutPedidoPayload(CreatePedidoPayload):
 
 
 class ResponsePedidoPayload(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
