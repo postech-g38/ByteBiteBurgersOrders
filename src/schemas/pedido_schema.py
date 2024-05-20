@@ -32,4 +32,8 @@ class ResponsePedidoPayload(BaseModel):
 class ResponsePagination(BaseModel):
     items: list[ResponsePedidoPayload]
     quantidade: int
+
+
+class PedidoStatusQuery(BaseModel):
+    status: str
     
