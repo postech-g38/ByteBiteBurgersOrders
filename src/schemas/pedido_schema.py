@@ -15,6 +15,7 @@ class CreatePedidoPayload(BaseModel):
 
 class CheckoutPedidoPayload(CreatePedidoPayload):
     usuario_documento: Optional[str] = None
+    produtos: list[ProdudoPedidoSchema]
     
 
 
@@ -31,4 +32,8 @@ class ResponsePedidoPayload(BaseModel):
 class ResponsePagination(BaseModel):
     items: list[ResponsePedidoPayload]
     quantidade: int
+
+
+class PedidoStatusQuery(BaseModel):
+    status: str
     

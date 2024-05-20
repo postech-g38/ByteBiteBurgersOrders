@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, Response, Request
+from fastapi import APIRouter, Depends, Response, Request, Query, Body, Path
 
 from src.services.pedido_service import PedidoService
 from src.adapters.repositories import PedidoRepository
-from src.schemas.pedido_schema import CreatePedidoPayload, ResponsePedidoPayload, ResponsePagination
+from src.schemas.pedido_schema import CreatePedidoPayload, ResponsePedidoPayload, ResponsePagination, CheckoutPedidoPayload, PedidoStatusQuery
 from src.schemas.base_schema import QueryPaginate
+from src.api import UsuarioApi, PagamentoApi, usuario_api_facade, pagamento_api_facade
 
 router = APIRouter(prefix='/pedido', tags=['Pedido'])
 
@@ -13,7 +14,7 @@ router = APIRouter(prefix='/pedido', tags=['Pedido'])
     response_model=ResponsePagination, 
     summary='Pegar todos os Pedidos'
 )
-def get_all(query: QueryPaginate = Depends(), repository: PedidoRepository = Depends()):
+def get_all(repository: PedidoRepository = Depends()):
     response = PedidoService(repository).get_all()
     return {
         'items': response,
@@ -26,7 +27,7 @@ def get_all(query: QueryPaginate = Depends(), repository: PedidoRepository = Dep
     response_model=ResponsePedidoPayload, 
     summary='Pegar Pedido'
 )
-def get(pedido_id: int, repository: PedidoRepository = Depends()):
+def get(pedido_id: int = Path(...), repository: PedidoRepository = Depends()):
     return PedidoService(repository).get_by_id(pedido_id)
 
 
@@ -35,7 +36,7 @@ def get(pedido_id: int, repository: PedidoRepository = Depends()):
     response_model=ResponsePedidoPayload, 
     summary='Atualizar Pedido'
 )
-def update(pedido_id: int, data: CreatePedidoPayload, repository: PedidoRepository = Depends()):
+def update(pedido_id: int = Path(...), data: CreatePedidoPayload = Body(...), repository: PedidoRepository = Depends()):
     return PedidoService(repository).update(pedido_id, data)
 
 
@@ -44,7 +45,7 @@ def update(pedido_id: int, data: CreatePedidoPayload, repository: PedidoReposito
     response_model=ResponsePedidoPayload, 
     summary='Deletar Pedido'
 )
-def delete(pedido_id: int, repository: PedidoRepository = Depends()):
+def delete(pedido_id: int = Path(...), repository: PedidoRepository = Depends()):
     return PedidoService(repository).delete(pedido_id)
 
 
@@ -53,8 +54,8 @@ def delete(pedido_id: int, repository: PedidoRepository = Depends()):
     response_model=ResponsePagination, 
     summary='Pegar Pedido por Status'
 )
-def pedido_get_by_status(status: str, repository: PedidoRepository = Depends()):
-    return PedidoService(repository).get_by_status(status=status)
+def pedido_get_by_status(status: str = Query(...), repository: PedidoRepository = Depends()):
+    return PedidoService(repository).get_by_status(status)
 
 
 @router.get(
@@ -71,5 +72,10 @@ def pending_orders(repository: PedidoRepository = Depends()):
     response_model=ResponsePedidoPayload, 
     summary='Efetuar pagamento do Pedido'
 )
-def checkout(payload: CreatePedidoPayload, repository: PedidoRepository = Depends()):
-    return PedidoService(repository).checkout(payload)
+def checkout(
+    payload: CheckoutPedidoPayload, 
+    repository: PedidoRepository = Depends(),
+    usuario: UsuarioApi = Depends(usuario_api_facade),
+    pagamento: PagamentoApi = Depends(pagamento_api_facade)
+    ):
+    return PedidoService(repository).checkout(payload, usuario, pagamento)

@@ -1,6 +1,6 @@
 from typing import Any
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query, Path, Body
 from http import HTTPStatus
 
 from src.services.produto_service import ProdutoService
@@ -30,7 +30,7 @@ def paginate(repository: ProdutoRepository = Depends()):
     response_model=ResponseProduto, 
     summary='Pegar Produto'
 )
-def get(produto_id: int, repository: ProdutoRepository = Depends()):
+def get(produto_id: int = Path(...), repository: ProdutoRepository = Depends()):
     return ProdutoService(repository).get_by_id(produto_id)
 
 
@@ -50,7 +50,7 @@ def create(data: CreateProdutoPayload, repository: ProdutoRepository = Depends()
     response_model=ResponseProduto, 
     summary='Atualizar Produto'
 )
-def update(produto_id: int, data: CreateProdutoPayload, repository: ProdutoRepository = Depends()):
+def update(produto_id: int = Path(...), data: CreateProdutoPayload = Body(...), repository: ProdutoRepository = Depends()):
     return ProdutoService(repository).update(produto_id, data)
 
 
@@ -60,7 +60,7 @@ def update(produto_id: int, data: CreateProdutoPayload, repository: ProdutoRepos
     response_model=ResponseProduto, 
     summary='Deletar Produto'
 )
-def delete(produto_id: int, repository: ProdutoRepository = Depends()):
+def delete(produto_id: int = Path(...), repository: ProdutoRepository = Depends()):
     return ProdutoService(repository).delete(produto_id)
 
 
@@ -71,7 +71,7 @@ def delete(produto_id: int, repository: ProdutoRepository = Depends()):
     summary='Pegar Produtos por Categoria'
 )
 def get_by_category(
-    params: ProdutoCategoriaParams = Depends(), 
+    categoria: str = Query(...), 
     repository: ProdutoRepository = Depends()
 ):
-    return ProdutoService(repository).get_by_categoria(params.categoria)
+    return ProdutoService(repository).get_by_categoria(categoria)
