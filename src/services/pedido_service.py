@@ -44,13 +44,13 @@ class PedidoService(BaseService):
         )
 
     def checkout(self, data: CheckoutPedidoPayload, usuario_api: UsuarioApi, pagamento_api: PagamentoApi) -> PedidoModel:
-        row = PedidoModel(**dict(data))
+        row = PedidoModel()
         total = 0
+        usuario_id = None
 
         if data.usuario_documento:
-            user = usuario_api.get_user(data.usuario_documento)
-        
-        usuario_id = usuario_id.get('id')
+            usuario = usuario_api.get_user(data.usuario_documento)
+            usuario_id = usuario.get('id')
 
         for produto in data.produtos:
             produto_info = self.query_result(self.repository.search_by_id(produto.produto_id))
