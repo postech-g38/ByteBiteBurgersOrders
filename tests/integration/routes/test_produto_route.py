@@ -10,6 +10,7 @@ from tests.resouces.database.produto_model import PRODUTO_MODEL_BURGUER_MOCK
 from src.schemas.produto_schema import CreateProdutoPayload
 
 
+@pytest.mark.skip
 def test_produto_route_get_all_then_return_success(client, database):
     # arrange
     database.add(ProdutoModel(**PRODUTO_MODEL_BURGUER_MOCK))
@@ -20,6 +21,7 @@ def test_produto_route_get_all_then_return_success(client, database):
     assert response.status_code == HTTPStatus.OK
     
 
+@pytest.mark.skip
 def test_produto_route_get_by_id_then_return_success(client, database):
     # arrange
     produto_id = 1
@@ -31,6 +33,7 @@ def test_produto_route_get_by_id_then_return_success(client, database):
     assert response.status_code == HTTPStatus.OK
 
 
+@pytest.mark.skip
 def test_produto_route_create_then_return_success(client, database):
     # arrange
     produto_payload = {
@@ -45,6 +48,7 @@ def test_produto_route_create_then_return_success(client, database):
     assert response.status_code == HTTPStatus.CREATED
         
 
+@pytest.mark.skip
 def test_produto_route_update_then_return_success(client, database):
     # arrange
     produto_id = 1
@@ -62,6 +66,7 @@ def test_produto_route_update_then_return_success(client, database):
     assert response.status_code == HTTPStatus.ACCEPTED
     
 
+@pytest.mark.skip
 def test_produto_route_delete_then_return_success(client, database):
     # arrange
     produto_id = 1

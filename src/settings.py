@@ -38,7 +38,7 @@ class DatabaseSettings(BaseSettings):
 
     @property
     def unittest_sync_uri(self) -> str:
-        return 'sqlite:///unittest.db'
+        return 'sqlite:///.target/unittest.db'
 
     @property
     def sync_uri(self) -> URL:
@@ -60,10 +60,14 @@ class ApiSettings(BaseSettings):
     usuario_api_host: str = Field(..., validation_alias='API_USUARIO_HOST')
 
 
+class QueueSettings(BaseSettings):
+    queue_url: str = Field(..., validation_alias='QUEUE_URL')
+
 
 class GeneralSettings(BaseSettings):
     application_settings: ClassVar = ApplicationSettings()
     database_settings: ClassVar = DatabaseSettings()
+    queue_settings: ClassVar = QueueSettings()
     api_settings: ClassVar = ApiSettings()
 
 

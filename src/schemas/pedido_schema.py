@@ -38,4 +38,8 @@ class ResponsePagination(BaseModel):
 
 class PedidoStatusQuery(BaseModel):
     status: str
+
+
+class UpdatePedidoPagamentoPayload(BaseModel):
+    status: str
     

@@ -1,10 +1,15 @@
-from fastapi import APIRouter, Depends, Response, Request, Query, Body, Path
+from http import HTTPStatus
+
+from fastapi import APIRouter, Depends, Body, Path
+from fastapi.responses import JSONResponse
 
 from src.services.pedido_service import PedidoService
-from src.adapters.repositories import PedidoRepository
-from src.schemas.pedido_schema import CreatePedidoPayload, ResponsePedidoPayload, ResponsePagination, CheckoutPedidoPayload, PedidoStatusQuery
+from src.adapters.repositories import PedidoRepository, ProdutoRepository
+from src.schemas.pedido_schema import CreatePedidoPayload, ResponsePedidoPayload, ResponsePagination, CheckoutPedidoPayload, PedidoStatusQuery, UpdatePedidoPagamentoPayload
 from src.schemas.base_schema import QueryPaginate
-from src.api import UsuarioApi, PagamentoApi, usuario_api_facade, pagamento_api_facade
+from src.api import UsuarioApi, usuario_api_facade
+from src.adapters.broker import AwsSQS, aws_sqs_facade
+from src.constants import HEADERS
 
 router = APIRouter(prefix='/pedido', tags=['Pedido'])
 
@@ -28,7 +33,12 @@ def get_all(repository: PedidoRepository = Depends()):
     summary='Pegar Pedido'
 )
 def get(pedido_id: int = Path(...), repository: PedidoRepository = Depends()):
-    return PedidoService(repository).get_by_id(pedido_id)
+    data = PedidoService(repository).get_by_id(pedido_id)
+    return JSONResponse(
+        content=data, 
+        status_code=HTTPStatus.OK, 
+        headers=HEADERS
+    )
 
 
 @router.put(
@@ -37,7 +47,12 @@ def get(pedido_id: int = Path(...), repository: PedidoRepository = Depends()):
     summary='Atualizar Pedido'
 )
 def update(pedido_id: int = Path(...), data: CreatePedidoPayload = Body(...), repository: PedidoRepository = Depends()):
-    return PedidoService(repository).update(pedido_id, data)
+    data = PedidoService(repository).update(pedido_id, data)
+    return JSONResponse(
+        content=data, 
+        status_code=HTTPStatus.ACCEPTED, 
+        headers=HEADERS
+    )
 
 
 @router.delete(
@@ -46,7 +61,12 @@ def update(pedido_id: int = Path(...), data: CreatePedidoPayload = Body(...), re
     summary='Deletar Pedido'
 )
 def delete(pedido_id: int = Path(...), repository: PedidoRepository = Depends()):
-    return PedidoService(repository).delete(pedido_id)
+    data = PedidoService(repository).delete(pedido_id)
+    return JSONResponse(
+        content=data, 
+        status_code=HTTPStatus.NO_CONTENT, 
+        headers=HEADERS
+    )
 
 
 @router.get(
@@ -68,7 +88,12 @@ def pedido_get_by_status(status: str = Path(...), repository: PedidoRepository =
     summary='Listagem de pedidos nao finalizados'
 )
 def pending_orders(repository: PedidoRepository = Depends()):
-    return PedidoService(repository).pending_orders()
+    data = PedidoService(repository).pending_orders()
+    return JSONResponse(
+        content=data, 
+        status_code=HTTPStatus.OK, 
+        headers=HEADERS
+    )
 
 
 @router.post(
@@ -78,8 +103,32 @@ def pending_orders(repository: PedidoRepository = Depends()):
 )
 def checkout(
     payload: CheckoutPedidoPayload, 
-    repository: PedidoRepository = Depends(),
+    pedido_repository: PedidoRepository = Depends(),
+    produto_repository: ProdutoRepository = Depends(),
     usuario: UsuarioApi = Depends(usuario_api_facade),
-    pagamento: PagamentoApi = Depends(pagamento_api_facade)
-    ):
-    return PedidoService(repository).checkout(payload, usuario, pagamento)
+    queue: AwsSQS = Depends(aws_sqs_facade)
+):
+    data = PedidoService(pedido_repository, produto_repository).checkout(payload, usuario, queue)
+    return JSONResponse(
+        content=data, 
+        status_code=HTTPStatus.CREATED, 
+        headers=HEADERS
+    )
+
+
+@router.put(
+    path='/{pedido_id}/pagamento', 
+    response_model=ResponsePedidoPayload, 
+    summary='Atualizar Pedido'
+)
+def update_pagamento(
+    pedido_id: int = Path(...), 
+    data: UpdatePedidoPagamentoPayload = Body(...), 
+    repository: PedidoRepository = Depends()
+):
+    data = PedidoService(repository).update_pagamento(pedido_id, data)
+    return JSONResponse(
+        content=data, 
+        status_code=HTTPStatus.ACCEPTED, 
+        headers=HEADERS
+    )
