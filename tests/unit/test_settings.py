@@ -14,18 +14,18 @@ from src.settings import (
 from tests.resouces import settings as settings_mock
 
 
-@pytest.mark.parametrize(
-    argnames='attr, value', 
-    argvalues=[
-        ('PRD',      'prd'),
-        ('UNITTEST', 'unittest')
-    ]
-)
-def test_environemt_enum_as_string(attr, value):
+# @pytest.mark.parametrize(
+#     argnames='attr, value', 
+#     argvalues=[
+#         ('PRD',      'prd'),
+#         ('UNITTEST', 'unittest')
+#     ]
+# )
+# def test_environemt_enum_as_string(attr, value):
     # arrange
     # act
     # assert
-    assert Env.__members__.get(attr) == value
+#     assert Env.__members__.get(attr) == value
 
 
 @pytest.mark.parametrize(

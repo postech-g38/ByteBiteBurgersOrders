@@ -23,4 +23,4 @@ def test_base_service_query_result_then_raise_not_found_exception():
     # assert
     assert query_exception.type is NotFoundExcepition
     assert query_exception.value.status_code == 204
-    assert query_exception.value.detail == 'values not found'
+    assert query_exception.value.detail == 'data not found'
