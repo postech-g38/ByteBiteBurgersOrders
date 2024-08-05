@@ -5,7 +5,7 @@ import json
 from src.adapters.repositories import PedidoRepository, ProdutoRepository
 from src.adapters.database.models.pedido_model import PedidoModel
 from src.schemas.pedido_schema import CreatePedidoPayload, ResponsePedidoPayload, CheckoutPedidoPayload, UpdatePedidoPagamentoPayload
-from src.services.service_base import BaseService
+from src.services.service_base import BaseService, try_except
 from src.enums import PedidoStatus
 from src.api import UsuarioApi, PagamentoApi
 from src.adapters.broker.settings import AwsSQS
@@ -45,6 +45,7 @@ class PedidoService(BaseService):
             sorted([i for i in rows if i.status_pedido == PedidoStatus.PRONTO], key=lambda x: x.created_at)
         )
 
+    @try_except
     def checkout(self, data: CheckoutPedidoPayload, usuario_api: UsuarioApi, queue: AwsSQS) -> PedidoModel:
         row = PedidoModel()
         total = 0
