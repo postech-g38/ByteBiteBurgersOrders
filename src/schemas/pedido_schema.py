@@ -20,12 +20,12 @@ class CheckoutPedidoPayload(CreatePedidoPayload):
 
 
 class ResponsePedidoPayload(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, extra='ignore')
     
     id: int
-    created_at: Optional[datetime]
-    updated_at: Optional[datetime]
-    deleted_at: Optional[datetime]
+    # created_at: Optional[datetime]
+    # updated_at: Optional[datetime]
+    # deleted_at: Optional[datetime]
     status_pedido: Optional[str]
     status_pagamento: Optional[str]
     pagamento_id: Optional[str]
@@ -37,5 +37,9 @@ class ResponsePagination(BaseModel):
 
 
 class PedidoStatusQuery(BaseModel):
+    status: str
+
+
+class UpdatePedidoPagamentoPayload(BaseModel):
     status: str
     

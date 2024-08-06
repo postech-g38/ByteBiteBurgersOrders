@@ -1,7 +1,7 @@
 from typing import Any, List
 from datetime import datetime
 
-from src.services.service_base import BaseService
+from src.services.service_base import BaseService, try_except
 from src.adapters.repositories import ProdutoRepository
 from src.adapters.database.models.produto_model import ProdutoModel
 from src.schemas.produto_schema import CreateProdutoPayload, ResponseProduto
@@ -11,6 +11,7 @@ class ProdutoService(BaseService):
     def __init__(self, repository: ProdutoRepository) -> None:
         self.repository = repository
 
+    @try_except
     def get_all(self) -> List[ProdutoModel]:
         return self.query_result(self.repository.get_all())
 

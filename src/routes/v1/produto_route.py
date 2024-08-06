@@ -1,6 +1,8 @@
 from typing import Any
+import json
 
 from fastapi import APIRouter, Depends, Query, Path, Body
+from fastapi.responses import JSONResponse
 from http import HTTPStatus
 
 from src.services.produto_service import ProdutoService
@@ -8,6 +10,11 @@ from src.adapters.repositories import ProdutoRepository
 from src.schemas.produto_schema import CreateProdutoPayload, ResponseProduto, ResponsePagination, ProdutoCategoriaParams
 
 router = APIRouter(prefix='/produto', tags=['Produto'])
+
+HEADERS = {
+    'Content-Type': 'application/json',
+    'X-Content-Type-Options': 'nosniff'
+}
 
 
 @router.get(
@@ -17,11 +24,17 @@ router = APIRouter(prefix='/produto', tags=['Produto'])
     summary='Pegar todos os Produtos'
 )
 def paginate(repository: ProdutoRepository = Depends()):
-    response = ProdutoService(repository).get_all()
-    return {
-        'items': response,
-        'quantidade': len(response)
-    }
+    load = ProdutoService(repository).get_all()
+    response = ResponsePagination(
+        items=load,
+        quantidade=len(load)
+    )
+    return JSONResponse(
+        content=response.model_dump(),
+        status_code=HTTPStatus.OK,
+        headers=HEADERS
+    )
+
 
 
 @router.get(

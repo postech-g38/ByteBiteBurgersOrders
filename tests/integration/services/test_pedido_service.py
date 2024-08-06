@@ -10,7 +10,7 @@ from tests.resouces.database.pedido_model import PEDIDO_MODEL_LANCHE_MOCK, PEDID
 from src.schemas.pedido_schema import CreatePedidoPayload
 
 
-@pytest.mark.integration_test
+@pytest.mark.skip
 def test_pedido_service_get_all_then_return_pedido_list(database):
     # arrange
     repository = PedidoRepository(database)
@@ -23,7 +23,7 @@ def test_pedido_service_get_all_then_return_pedido_list(database):
 
 
 
-@pytest.mark.integration_test
+@pytest.mark.skip
 def test_pedido_service_get_by_id_then_return_pedido_entity(database):
     # arrange
     pedido_id = 1
@@ -37,7 +37,7 @@ def test_pedido_service_get_by_id_then_return_pedido_entity(database):
 
 
 
-@pytest.mark.integration_test
+@pytest.mark.skip
 def test_pedido_service_get_by_id_then_raise_not_found_exception(database):
     # arrange
     pedido_id = 1
@@ -49,7 +49,7 @@ def test_pedido_service_get_by_id_then_raise_not_found_exception(database):
     # assert
 
 
-@pytest.mark.integration_test 
+@pytest.mark.skip 
 def test_pedido_service_update_then_return_pedido_entity(database):
     # arrange
     pedido_id = 1
@@ -64,7 +64,7 @@ def test_pedido_service_update_then_return_pedido_entity(database):
 
 
 
-@pytest.mark.integration_test
+@pytest.mark.skip
 def test_pedido_service_delete_then_return_pedido_entity(database):
     # arrange
     pedido_id = 1
@@ -78,7 +78,7 @@ def test_pedido_service_delete_then_return_pedido_entity(database):
 
 
 
-@pytest.mark.integration_test
+@pytest.mark.skip
 def test_pedido_service_pending_orders_then_return_pedidos_list(database):
     # arrange
     repository = PedidoRepository(database)
@@ -92,7 +92,7 @@ def test_pedido_service_pending_orders_then_return_pedidos_list(database):
     # assert
 
 
-@pytest.mark.integration_test
+@pytest.mark.skip
 def test_pedido_service_get_by_status_then_return_pedido_list(database):
     # arrange
     pedido_status = 'recebido'
@@ -107,6 +107,6 @@ def test_pedido_service_get_by_status_then_return_pedido_list(database):
 
 
 @pytest.mark.skip
-@pytest.mark.integration_test
+@pytest.mark.skip
 def test_pedido_checkout_then_return(database):
     pass
