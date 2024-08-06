@@ -11,7 +11,6 @@ class AwsSQS:
 
     def publish(self, message: Dict[str, Any], key: Optional[str] = None) -> Dict[str, Any]:
         response = self._client.send_message(
-            MessageGroupId='order',
             QueueUrl=self._reference, 
             MessageBody=json.dumps(message)
         )

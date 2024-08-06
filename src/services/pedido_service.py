@@ -45,7 +45,6 @@ class PedidoService(BaseService):
             sorted([i for i in rows if i.status_pedido == PedidoStatus.PRONTO], key=lambda x: x.created_at)
         )
 
-    @try_except
     def checkout(self, data: CheckoutPedidoPayload, usuario_api: UsuarioApi, queue: AwsSQS) -> PedidoModel:
         row = PedidoModel()
         total = 0
@@ -58,8 +57,6 @@ class PedidoService(BaseService):
         for produto in data.produtos:
             produto_info = self.query_result(self._produto_repository.search_by_id(produto.produto_id))
             total += (produto_info.preco * produto.quantidade)
-
-        produtos = {'data': [i.model_dump() for i in data.produtos]}
 
         row.valor = total
         row.status_pedido = PedidoStatus.RECEBIDO
