@@ -15,7 +15,7 @@ from src.settings import  get_settings, execution_environment, Env
 _logger = logging.getLogger(__name__)
 
 
-def _get_sync_uri() -> URL | str:
+def _get_sync_uri() -> URL:
     if execution_environment(Env.UNITTEST):
         return get_settings().database_settings.unittest_sync_uri
     return get_settings().database_settings.sync_uri
