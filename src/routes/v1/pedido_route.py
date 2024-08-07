@@ -19,8 +19,11 @@ router = APIRouter(prefix='/pedido', tags=['Pedido'])
     response_model=ResponsePagination, 
     summary='Pegar todos os Pedidos'
 )
-def get_all(repository: PedidoRepository = Depends()):
-    response = PedidoService(repository).get_all()
+def get_all(
+    pedido_repository: PedidoRepository = Depends(),
+    produto_repository: ProdutoRepository = Depends(),
+):
+    response = PedidoService(pedido_repository, produto_repository).get_all()
     return {
         'items': response,
         'quantidade': len(response)
@@ -32,8 +35,12 @@ def get_all(repository: PedidoRepository = Depends()):
     response_model=ResponsePedidoPayload, 
     summary='Pegar Pedido'
 )
-def get(pedido_id: int = Path(...), repository: PedidoRepository = Depends()):
-    data = PedidoService(repository).get_by_id(pedido_id)
+def get(
+    pedido_id: int = Path(...), 
+    pedido_repository: PedidoRepository = Depends(),
+    produto_repository: ProdutoRepository = Depends()
+):
+    data = PedidoService(pedido_repository, produto_repository).get_by_id(pedido_id)
     return JSONResponse(
         content=data, 
         status_code=HTTPStatus.OK, 
@@ -46,8 +53,13 @@ def get(pedido_id: int = Path(...), repository: PedidoRepository = Depends()):
     response_model=ResponsePedidoPayload, 
     summary='Atualizar Pedido'
 )
-def update(pedido_id: int = Path(...), data: CreatePedidoPayload = Body(...), repository: PedidoRepository = Depends()):
-    data = PedidoService(repository).update(pedido_id, data)
+def update(
+    pedido_id: int = Path(...), 
+    data: CreatePedidoPayload = Body(...), 
+    pedido_repository: PedidoRepository = Depends(),
+    produto_repository: ProdutoRepository = Depends()
+):
+    data = PedidoService(pedido_repository, produto_repository).update(pedido_id, data)
     return JSONResponse(
         content=data, 
         status_code=HTTPStatus.ACCEPTED, 
@@ -60,8 +72,12 @@ def update(pedido_id: int = Path(...), data: CreatePedidoPayload = Body(...), re
     response_model=ResponsePedidoPayload, 
     summary='Deletar Pedido'
 )
-def delete(pedido_id: int = Path(...), repository: PedidoRepository = Depends()):
-    data = PedidoService(repository).delete(pedido_id)
+def delete(
+    pedido_id: int = Path(...), 
+    pedido_repository: PedidoRepository = Depends(),
+    produto_repository: ProdutoRepository = Depends(),
+):
+    data = PedidoService(pedido_repository, produto_repository).delete(pedido_id)
     return JSONResponse(
         content=data, 
         status_code=HTTPStatus.NO_CONTENT, 
@@ -74,8 +90,12 @@ def delete(pedido_id: int = Path(...), repository: PedidoRepository = Depends())
     response_model=ResponsePagination, 
     summary='Pegar Pedido por Status'
 )
-def pedido_get_by_status(status: str = Path(...), repository: PedidoRepository = Depends()):
-    response = PedidoService(repository).get_by_status(status)
+def pedido_get_by_status(
+    status: str = Path(...), 
+    pedido_repository: PedidoRepository = Depends(),
+    produto_repository: ProdutoRepository = Depends()
+):
+    response = PedidoService(pedido_repository, produto_repository).get_by_status(status)
     return {
         'items': response,
         'quantidade': len(response)
@@ -87,8 +107,11 @@ def pedido_get_by_status(status: str = Path(...), repository: PedidoRepository =
     response_model=ResponsePagination, 
     summary='Listagem de pedidos nao finalizados'
 )
-def pending_orders(repository: PedidoRepository = Depends()):
-    data = PedidoService(repository).pending_orders()
+def pending_orders(
+    pedido_repository: PedidoRepository = Depends(),
+    produto_repository: ProdutoRepository = Depends(),
+):
+    data = PedidoService(pedido_repository, produto_repository).pending_orders()
     return JSONResponse(
         content=data, 
         status_code=HTTPStatus.OK, 
@@ -124,9 +147,10 @@ def checkout(
 def update_pagamento(
     pedido_id: int = Path(...), 
     data: UpdatePedidoPagamentoPayload = Body(...), 
-    repository: PedidoRepository = Depends()
+    pedido_repository: PedidoRepository = Depends(),
+    produto_repository: ProdutoRepository = Depends()
 ):
-    data = PedidoService(repository).update_pagamento(pedido_id, data)
+    data = PedidoService(pedido_repository, produto_repository).update_pagamento(pedido_id, data)
     return JSONResponse(
         content=data, 
         status_code=HTTPStatus.ACCEPTED, 
