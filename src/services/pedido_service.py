@@ -77,5 +77,8 @@ class PedidoService(BaseService):
         return ResponsePedidoPayload.model_validate(row).model_dump()
     
     def update_pagamento(self, order_id: int, payload: UpdatePedidoPagamentoPayload):
-        self._pedido_repository.update(order_id, {'pagamento': payload.status})
+        self._pedido_repository.update(order_id, {
+            'status_pagamento': payload.status,
+            'pagamento_id': payload.pagamento_id
+            })
         

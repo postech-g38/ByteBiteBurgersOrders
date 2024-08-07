@@ -28,7 +28,7 @@ class ResponsePedidoPayload(BaseModel):
     # deleted_at: Optional[datetime]
     status_pedido: Optional[str]
     status_pagamento: Optional[str]
-    pagamento_id: Optional[str]
+    # pagamento_id: Optional[str]
 
 
 class ResponsePagination(BaseModel):
@@ -41,5 +41,6 @@ class PedidoStatusQuery(BaseModel):
 
 
 class UpdatePedidoPagamentoPayload(BaseModel):
+    pagamento_id: int
     status: str
     
