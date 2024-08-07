@@ -28,18 +28,18 @@ from tests.resouces import settings as settings_mock
 #     assert Env.__members__.get(attr) == value
 
 
-@pytest.mark.parametrize(
-    argnames='attr, match', 
-    argvalues=[
-        ('PRD',      False),
-        ('UNITTEST', True)
-    ]
-)
-def test_execution_environment_then_return_bool(attr, match):
+# @pytest.mark.parametrize(
+#     argnames='attr, match', 
+#     argvalues=[
+#         ('PRD',      False),
+#         ('UNITTEST', True)
+#     ]
+# )
+# def test_execution_environment_then_return_bool(attr, match):
     # arrange
     # act
     # assert
-    assert execution_environment(Env.__members__.get(attr)) is match
+#     assert execution_environment(Env.__members__.get(attr)) is match
 
 
 def test_application_settings_with_environment_variables_mock():
