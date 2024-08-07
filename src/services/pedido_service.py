@@ -52,7 +52,7 @@ class PedidoService(BaseService):
 
         if data.usuario_documento:
             usuario = usuario_api.get_user(data.usuario_documento)
-            usuario_id = usuario.get('id')
+            usuario_id = int(usuario['id']) if usuario.get('id') else None
 
         for produto in data.produtos:
             produto_info = self.query_result(self._produto_repository.search_by_id(produto.produto_id))
